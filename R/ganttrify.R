@@ -141,23 +141,23 @@ ganttrify <- function(project,
     colour_palette <- rep(colour_palette, length(unique(project$wp)))[1:length(unique(project$wp))]
   }
 
-  if (is.null(line_end) == FALSE) {
+  if (!is.null(line_end)) {
     line_end_wp <- line_end
     line_end_activity <- line_end
   }
 
-  if (label_wrap != FALSE) {
-    if (isTRUE(label_wrap)) {
+  if (!label_wrap) {
+    if (label_wrap) {
       label_wrap <- 32
     }
     project$wp <- stringr::str_wrap(string = project$wp, width = label_wrap)
     project$activity <- stringr::str_wrap(string = project$activity, width = label_wrap)
-    if (is.null(spots) == FALSE) {
+    if (!is.null(spots)) {
       spots$activity <- stringr::str_wrap(string = spots$activity, width = label_wrap)
     }
   }
 
-  if (by_date == FALSE) {
+  if (!by_date) {
     df <- project %>%
       dplyr::mutate(
         start_date = as.numeric(start_date),
@@ -182,7 +182,7 @@ ganttrify <- function(project,
         end_date = zoo::as.Date(end_date_yearmon, frac = 1)
       )
   } else {
-    if (exact_date == TRUE) {
+    if (exact_date) {
       # do nothing
     } else {
       df_yearmon <- project %>%
@@ -199,7 +199,7 @@ ganttrify <- function(project,
     }
   }
 
-  if (exact_date == TRUE) {
+  if (exact_date) {
     df <- project %>%
       dplyr::mutate(
         start_date = as.Date(start_date),
@@ -287,7 +287,7 @@ ganttrify <- function(project,
     labels = rev(unlist(t(matrix(c(distinct_yearmon_labels_df$wp, distinct_yearmon_labels_df$activity), ncol = 2))))
   )
 
-  if (exact_date == TRUE) {
+  if (exact_date) {
     df_yearmon_fct <-
       dplyr::bind_rows(
         activity = df,
@@ -322,7 +322,7 @@ ganttrify <- function(project,
   }
 
 
-  if (hide_wp == TRUE) {
+  if (hide_wp) {
     df_yearmon_fct <- df_yearmon_fct %>%
       dplyr::filter(type != "wp")
   }
@@ -350,12 +350,12 @@ ganttrify <- function(project,
       fill = colour_stripe
     )
 
-  if (mark_quarters == TRUE) {
+  if (mark_quarters) {
     gg_gantt <- gg_gantt +
       ggplot2::geom_vline(xintercept = date_breaks_q, colour = "gray50")
   }
 
-  if (mark_years == TRUE) {
+  if (mark_years) {
     gg_gantt <- gg_gantt +
       ggplot2::geom_vline(xintercept = date_breaks_y, colour = "gray50")
   }
@@ -384,7 +384,7 @@ ganttrify <- function(project,
       alpha = df_yearmon_fct$wp_alpha
     )
 
-  if (month_number_label == TRUE & month_date_label == TRUE) {
+  if (month_number_label & month_date_label) {
     gg_gantt <- gg_gantt +
       ggplot2::scale_x_date(
         name = "",
@@ -393,7 +393,7 @@ ganttrify <- function(project,
         minor_breaks = NULL,
         sec.axis = ggplot2::dup_axis(labels = paste0(month_label_string, seq_along(date_breaks) * month_breaks - (month_breaks - 1)))
       )
-  } else if (month_number_label == FALSE & month_date_label == TRUE) {
+  } else if (!month_number_label & month_date_label) {
     gg_gantt <- gg_gantt +
       ggplot2::scale_x_date(
         name = "",
@@ -402,7 +402,7 @@ ganttrify <- function(project,
         minor_breaks = NULL,
         position = x_axis_position
       )
-  } else if (month_number_label == TRUE & month_date_label == FALSE) {
+  } else if (month_number_label & !month_date_label) {
     gg_gantt <- gg_gantt +
       ggplot2::scale_x_date(
         name = "",
@@ -411,7 +411,7 @@ ganttrify <- function(project,
         minor_breaks = NULL,
         position = x_axis_position
       )
-  } else if (month_number_label == FALSE & month_date_label == FALSE) {
+  } else if (!month_number_label & !month_date_label) {
     gg_gantt <- gg_gantt +
       ggplot2::scale_x_date(name = "")
   }
@@ -444,8 +444,8 @@ ganttrify <- function(project,
       legend.position = "none"
     )
 
-  if (is.null(spots) == FALSE) {
-    if (is.data.frame(spots) == TRUE) {
+  if (!is.null(spots)) {
+    if (is.data.frame(spots)) {
       spots_df <- spots %>%
         tidyr::drop_na() %>%
         dplyr::left_join(
@@ -456,7 +456,7 @@ ganttrify <- function(project,
         dplyr::mutate(activity = levels) %>%
         dplyr::select(-"levels")
 
-      if (by_date == FALSE) {
+      if (!by_date) {
         spots_date <- spots_df %>%
           dplyr::mutate(
             spot_date = as.numeric(spot_date),
@@ -470,7 +470,7 @@ ganttrify <- function(project,
             wp = NA
           )
       } else {
-        if (exact_date == TRUE) {
+        if (exact_date) {
           spots_date <- spots_df %>%
             dplyr::mutate(
               activity = factor(x = activity, levels = level_labels_df$levels),
@@ -508,7 +508,7 @@ ganttrify <- function(project,
     }
   }
 
-  if (show_vertical_lines == FALSE) {
+  if (!show_vertical_lines) {
     gg_gantt <- gg_gantt +
       ggplot2::theme(panel.grid.major.x = ggplot2::element_line(size = 0))
   }
