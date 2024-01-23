@@ -146,7 +146,7 @@ ganttrify <- function(project,
     line_end_activity <- line_end
   }
 
-  if (!label_wrap) {
+  if (label_wrap) {
     if (label_wrap) {
       label_wrap <- 32
     }
