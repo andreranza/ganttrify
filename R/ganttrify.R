@@ -384,7 +384,7 @@ ganttrify <- function(project,
       alpha = df_yearmon_fct$wp_alpha
     )
 
-  if (month_number_label & month_date_label) {
+  if (month_number_label && month_date_label) {
     gg_gantt <- gg_gantt +
       ggplot2::scale_x_date(
         name = "",
@@ -393,7 +393,7 @@ ganttrify <- function(project,
         minor_breaks = NULL,
         sec.axis = ggplot2::dup_axis(labels = paste0(month_label_string, seq_along(date_breaks) * month_breaks - (month_breaks - 1)))
       )
-  } else if (!month_number_label & month_date_label) {
+  } else if (!month_number_label && month_date_label) {
     gg_gantt <- gg_gantt +
       ggplot2::scale_x_date(
         name = "",
@@ -402,7 +402,7 @@ ganttrify <- function(project,
         minor_breaks = NULL,
         position = x_axis_position
       )
-  } else if (month_number_label & !month_date_label) {
+  } else if (month_number_label && !month_date_label) {
     gg_gantt <- gg_gantt +
       ggplot2::scale_x_date(
         name = "",
@@ -411,7 +411,7 @@ ganttrify <- function(project,
         minor_breaks = NULL,
         position = x_axis_position
       )
-  } else if (!month_number_label & !month_date_label) {
+  } else if (!month_number_label && !month_date_label) {
     gg_gantt <- gg_gantt +
       ggplot2::scale_x_date(name = "")
   }
